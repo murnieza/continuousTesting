@@ -88,7 +88,7 @@ class PerformanceTester
             echo '[ INFO ] No tests currently running. Continuing...' . PHP_EOL;
         }
 
-//        $this->startTest();
+        $this->startTest();
 
         while ($this->isRunning()) {
             echo "Testing in progress..." . PHP_EOL;
