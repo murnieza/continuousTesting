@@ -1,16 +1,38 @@
 <?php
 
+/**
+ * Class PerformanceTester
+ */
 class PerformanceTester
 {
+    /**
+     * constant for "Running" status
+     */
     const STATUS_RUNNING = 'Running';
 
+    /**
+     * @var BlazeMeter  api client object
+     */
     protected $api;
 
+    /**
+     * Sets API client
+     *
+     * @param $blazeMeter   BlazeMeter
+     */
     public function __construct($blazeMeter)
     {
         $this->api = $blazeMeter;
     }
 
+    /**
+     * Checks if test is not currently running. If not, starts new test and waits for it's completion.
+     * After test calls save of report file
+     *
+     * @param string $resultsFileName
+     *
+     * @throws LogicException
+     */
     public function run($resultsFileName ='report.jtl')
     {
         if ($this->isRunning()) {
@@ -31,11 +53,19 @@ class PerformanceTester
         echo '[ INFO ] Testing done.' . PHP_EOL;
     }
 
+    /**
+     * Sends start command to API
+     */
     protected function startTest()
     {
         $this->api->startTest();
     }
 
+    /**
+     * Checks current  status of test
+     *
+     * @return bool
+     */
     protected function isRunning()
     {
         $status = $this->api->getTestStatus();
@@ -47,6 +77,11 @@ class PerformanceTester
         return false;
     }
 
+    /**
+     * Downloads zip file and extracts reports file
+     *
+     * @param $fileName string  file name to extract
+     */
     protected function saveJtlFile($fileName)
     {
         $archive = $this->api->getArchive();
@@ -62,6 +97,12 @@ class PerformanceTester
         file_put_contents($fileName, $zipContent);
     }
 
+    /**
+     * Downloads zip file
+     *
+     * @param $link string  zip file URL
+     * @param $name string  name to save downloaded file under
+     */
     protected function downloadZip($link, $name)
     {
         $handler = fopen($name, 'wb');

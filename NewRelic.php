@@ -1,17 +1,37 @@
 <?php
 
+/**
+ * Class NewRelic   This class allows to connect to NewRelic API and fetch specific metrics
+ */
 class NewRelic
 {
+    /**
+     * @var string  unique string from NewRelic identifying user
+     */
     protected $apiKey;
 
+    /**
+     * @var string  unique string from NewRelic identifying application
+     */
     protected $applicationId;
 
+    /**
+     * Sets authentication parameters
+     *
+     * @param $apiKey           string
+     * @param $applicationId    string
+     */
     public function __construct($apiKey, $applicationId)
     {
         $this->apiKey = $apiKey;
         $this->applicationId = $applicationId;
     }
 
+    /**
+     * Triggers API call and saves fetched metrics
+     *
+     * @throws Exception
+     */
     public function run()
     {
         $curl = curl_init();
@@ -39,6 +59,11 @@ class NewRelic
 
     }
 
+    /**
+     * Glues request URL from base URL and authentication parameters
+     *
+     * @return string
+     */
     protected function getUrl()
     {
         $date = new \DateTime();
@@ -52,6 +77,11 @@ class NewRelic
         return $link;
     }
 
+    /**
+     * Saves metrics in Jenkins "Plots" plugin friendly format
+     *
+     * @param $object
+     */
     protected function saveMetric($object)
     {
         file_put_contents(
